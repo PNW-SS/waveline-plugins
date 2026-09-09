@@ -46,10 +46,11 @@ def validate(root=ROOT, tag=None):
     if tag is not None:
         require(tag == f"v{version}", "Release tag must match VERSION")
     environments = read_json(root / "environments.json")
-    require(set(environments) == {"production", "alpha", "staging", "local"}, "Expected four environments")
+    require(environments == {"production": {"plugin": "waveline", "url": "https://api.waveline.tel/mcp"}},
+            "Only the production Waveline configuration is allowed")
     names, urls = [], []
     for environment, config in environments.items():
-        name = "waveline" if environment == "production" else f"waveline-{environment}"
+        name = "waveline"
         require(config["plugin"] == name, f"Wrong plugin name for {environment}")
         url = urlsplit(config["url"])
         require(url.scheme == "https" and url.hostname and url.path == "/mcp"
@@ -58,8 +59,11 @@ def validate(root=ROOT, tag=None):
         names.append(name)
         urls.append(config["url"])
         folder = root / "plugins" / name
+        server = {"type": "http", "url": config["url"]}
+        server["oauth"] = {"clientId": "waveline-desktop",
+                           "callbackUrl": "http://127.0.0.1:43821/callback", "callbackPort": 43821}
         require(read_json(folder / ".mcp.json") == {
-            "mcpServers": {name: {"type": "http", "url": config["url"]}}
+            "mcpServers": {name: server}
         }, f"MCP config must match environment and contain no credentials or extra servers: {name}")
         for platform, manifest_dir in PLATFORMS.items():
             manifest = read_json(folder / manifest_dir / "plugin.json")
@@ -70,7 +74,7 @@ def validate(root=ROOT, tag=None):
             require(manifest["mcpServers"] == "./.mcp.json", "MCP reference must use shared config")
             require(manifest["description"].strip() and manifest["author"]["name"] == "Waveline", "Missing description/author")
             display = manifest["interface"]["displayName"] if platform == "openai" else manifest["displayName"]
-            expected = "Waveline" if environment == "production" else f"Waveline {environment.title()}"
+            expected = "Waveline"
             require(display == expected, f"Wrong environment display name: {name}")
             if platform == "openai":
                 for key in ("composerIcon", "logo", "logoDark"):
@@ -78,8 +82,11 @@ def validate(root=ROOT, tag=None):
                     require(asset.parent == folder / "assets" and asset.suffix == ".svg", "Assets must be bundled SVGs")
             package_files(folder, platform)
         require(not (folder / ".app.json").exists(), "Hosted app IDs require explicit registration and binding review")
-    require(len(set(urls)) == 4, "Environments must have distinct URLs")
-    require({p.name for p in (root / "plugins").iterdir()} == set(names), "Unexpected plugin folders")
+    # Git does not track empty directories left behind by a source cleanup.
+    present = {p.name for p in (root / "plugins").iterdir()
+               if p.is_file() or p.is_symlink()
+               or any(child.is_file() or child.is_symlink() for child in p.rglob("*"))}
+    require(present == set(names), "Unexpected plugin folders")
     for platform, relative in [("openai", ".agents/plugins/marketplace.json"), ("claude", ".claude-plugin/marketplace.json")]:
         marketplace = read_json(root / relative)
         require(marketplace["name"] == "waveline-plugins", "Wrong marketplace name")
@@ -134,6 +141,6 @@ if __name__ == "__main__":
             for archive in build():
                 print(archive.relative_to(ROOT))
         else:
-            print("All four environments and both marketplace formats validated.")
+            print("Production plugin and both marketplace formats validated.")
     except (ValueError, KeyError, TypeError, OSError) as error:
         parser.exit(1, f"Validation failed: {error}\n")

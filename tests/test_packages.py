@@ -27,8 +27,19 @@ class PackagingTests(unittest.TestCase):
         path.write_text(json.dumps(data))
 
     def test_wrong_environment_rejected(self):
-        self.change("plugins/waveline-alpha/.mcp.json", lambda d: d["mcpServers"]["waveline-alpha"].update(url="https://api.waveline.tel/mcp"))
+        self.change("plugins/waveline/.mcp.json", lambda d: d["mcpServers"]["waveline"].update(url="https://example.invalid/mcp"))
         with self.assertRaisesRegex(ValueError, "match environment"):
+            package.validate(self.root)
+
+    def test_nonproduction_config_rejected(self):
+        self.change("environments.json", lambda d: d.update(test={"plugin": "waveline-test", "url": "https://example.invalid/mcp"}))
+        with self.assertRaisesRegex(ValueError, "Only the production"):
+            package.validate(self.root)
+
+    def test_nonproduction_folder_rejected(self):
+        (self.root / "plugins/waveline-test").mkdir()
+        (self.root / "plugins/waveline-test/README.md").write_text("Not a public package")
+        with self.assertRaisesRegex(ValueError, "Unexpected plugin folders"):
             package.validate(self.root)
 
     def test_embedded_token_rejected(self):
@@ -64,7 +75,7 @@ class PackagingTests(unittest.TestCase):
         first = {p.name: p.read_bytes() for p in package.build(self.root)}
         second = {p.name: p.read_bytes() for p in package.build(self.root)}
         self.assertEqual(first, second)
-        self.assertEqual(len(first), 8)
+        self.assertEqual(len(first), 2)
         for name, content in first.items():
             with zipfile.ZipFile(self.root / "dist" / name) as archive:
                 self.assertIsNone(archive.testzip())
