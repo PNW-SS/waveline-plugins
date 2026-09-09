@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "waveline-local": {
+      "type": "http",
+      "url": "https://maksim-workers.pnw-devs.com/mcp"
+    }
+  }
+}

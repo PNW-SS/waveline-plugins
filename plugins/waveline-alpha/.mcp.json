@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "waveline-alpha": {
+      "type": "http",
+      "url": "https://alpha-api.pnwsoftwaresolutions.com/mcp"
+    }
+  }
+}

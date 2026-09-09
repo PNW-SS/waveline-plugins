@@ -1,0 +1,39 @@
+{
+  "name": "waveline-alpha",
+  "version": "0.1.0",
+  "description": "Private Alpha environment connector for testing Waveline calls, contacts, and messages.",
+  "author": {
+    "name": "Waveline"
+  },
+  "keywords": [
+    "waveline",
+    "voip",
+    "calls",
+    "messages",
+    "contacts",
+    "customer-support",
+    "alpha",
+    "testing"
+  ],
+  "interface": {
+    "displayName": "Waveline Alpha",
+    "shortDescription": "Alpha environment only. Private Waveline testing.",
+    "longDescription": "This private connector targets the Waveline Alpha environment at https://alpha-api.pnwsoftwaresolutions.com/mcp. Sign in separately and choose a workspace or one permitted inbox in that environment. Read contacts, external calls, messages, and saved transcripts. Optional authorized actions update contacts, append notes, and send test texts. Accepted sends record US$0.01 per recipient using this environment's billing configuration. Use isolated test data and approved test destinations.",
+    "developerName": "Waveline",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Show the connected Alpha workspace and inboxes.",
+      "Review yesterday's customer calls in Alpha.",
+      "Draft a test text in Alpha. Ask before sending."
+    ],
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/logo.svg",
+    "logoDark": "./assets/logo-dark.svg",
+    "brandColor": "#2563EB"
+  },
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "waveline",
+  "version": "0.1.0",
+  "description": "Find Waveline contacts, review customer calls and messages, and send explicitly approved text messages.",
+  "author": {
+    "name": "Waveline"
+  },
+  "keywords": ["waveline", "voip", "calls", "messages", "contacts", "customer-support"],
+  "interface": {
+    "displayName": "Waveline",
+    "shortDescription": "Review customer calls, contacts, and messages.",
+    "longDescription": "Connect your Waveline account to find contacts, review external calls and messages, and read saved transcripts and summaries. Choose Workspace or one permitted inbox and approve the requested permissions. Optional actions update contacts, add notes, and send approved text messages. Each accepted external recipient send costs US$0.01 before tax, added to your workspace invoice; existing messaging charges may also apply.",
+    "developerName": "Waveline",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "Review yesterday's missed customer calls.",
+      "Find a contact and summarize their recent calls and messages.",
+      "Draft a follow-up text for a customer. Ask before sending."
+    ],
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/logo.svg",
+    "logoDark": "./assets/logo-dark.svg"
+  },
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,6 @@
+{
+  "production": {"plugin": "waveline", "url": "https://api.waveline.tel/mcp"},
+  "alpha": {"plugin": "waveline-alpha", "url": "https://alpha-api.pnwsoftwaresolutions.com/mcp"},
+  "staging": {"plugin": "waveline-staging", "url": "https://staging-api.pnwsoftwaresolutions.com/mcp"},
+  "local": {"plugin": "waveline-local", "url": "https://maksim-workers.pnw-devs.com/mcp"}
+}

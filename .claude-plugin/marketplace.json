@@ -1,0 +1,25 @@
+{
+  "name": "waveline-plugins",
+  "owner": {
+    "name": "Waveline"
+  },
+  "plugins": [
+    {
+      "name": "waveline",
+      "source": "./plugins/waveline"
+    },
+    {
+      "name": "waveline-alpha",
+      "source": "./plugins/waveline-alpha"
+    },
+    {
+      "name": "waveline-staging",
+      "source": "./plugins/waveline-staging"
+    },
+    {
+      "name": "waveline-local",
+      "source": "./plugins/waveline-local"
+    }
+  ],
+  "description": "Waveline communication integrations for production and private development environments."
+}

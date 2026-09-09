@@ -1,0 +1,38 @@
+name: "Strict Branch Flow"
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - alpha
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  enforce-flow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Validate Merge Path"
+        shell: bash
+        env:
+          TARGET: ${{ github.base_ref }}
+          SOURCE: ${{ github.head_ref }}
+        run: |
+          # Define the allowed source for each target
+          case "$TARGET" in
+            "develop")     echo "No restrictions for merging into develop."; exit 0 ;;
+            "staging") ALLOWED="develop" ;;
+            "alpha")   ALLOWED="staging" ;;
+            "main")    ALLOWED="alpha"   ;;
+            *)         echo "No rules for $TARGET, skipping."; exit 0 ;;
+          esac
+
+          echo "Target: $TARGET | Source: $SOURCE | Allowed: $ALLOWED"
+
+          if [[ "$SOURCE" != "$ALLOWED" ]]; then
+            echo "::error::Invalid Merge! Only '$ALLOWED' can be merged into '$TARGET'. You tried '$SOURCE'."
+            exit 1
+          fi
