@@ -1,24 +1,22 @@
-# Connect Waveline in Claude
+# Connect Waveline in Claude Code
 
-Server: `https://api.waveline.tel/mcp`. Use only this environment's account and authorization.
+Server: `https://api.waveline.tel/mcp`.
 
-1. Confirm the intended server is enabled and reachable. Package installation
-   does not start or deploy the server.
-2. For hosted Claude, add this URL as a custom connector. The current registered
-   hosted client is `waveline-claude`, without a client secret, with callback
-   `https://claude.ai/api/mcp/auth_callback`. Confirm deployed configuration first.
-3. For Claude Code, this package uses `waveline-desktop` with callback port 43821.
-   Deploy the matching backend registration, then use `/mcp` to authenticate.
-   Do not substitute the hosted client ID with a native callback.
-   Verify Cowork's actual OAuth flow independently before claiming compatibility.
-4. Sign in to Waveline and select Workspace or one permitted inbox, starting with
-   read permissions. Read connection details and a known synthetic record.
-5. Add write permission only when needed. Obtain explicit approval before sending
-   the exact text to the specified external recipient from the selected inbox.
-   Each accepted recipient send costs US$0.01 before tax plus any applicable
-   existing messaging charges, accumulated on workspace billing.
+1. Install the Waveline plugin and use `/mcp` to start authentication.
+2. Sign in to Waveline using your own account.
+3. Choose Workspace or one permitted inbox. Review the permissions and start
+   with read-only access.
+4. Ask which Waveline connection and inboxes are available, and confirm that
+   they match the access you intended.
+5. Grant write permissions only when needed. Before sending a message, approve
+   the sending inbox, recipient, exact text, and the US$0.01 per accepted
+   external recipient charge before tax. Existing messaging charges may apply.
 
-If login fails, verify the environment's issuer/resource and client registration.
-Never request a production secret in chat, hard-code a bearer token, disable
-OAuth, or change permissions as a workaround. Setup instructions do not authorize
-sending messages, accessing unrelated inboxes, or making backend configuration changes.
+If authentication cannot complete, contact
+[support@pnwsoftwaresolutions.com](mailto:support@pnwsoftwaresolutions.com).
+Do not supply passwords, verification codes, or access tokens in chat or plugin
+files. The package includes the public client settings it needs.
+
+Installation does not start the Waveline service. Connection availability depends
+on the released service and your account's access. This setup guide does not
+authorize sending messages or accessing additional inboxes.
