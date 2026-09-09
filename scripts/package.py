@@ -58,8 +58,11 @@ def validate(root=ROOT, tag=None):
         names.append(name)
         urls.append(config["url"])
         folder = root / "plugins" / name
+        server = {"type": "http", "url": config["url"]}
+        server["oauth"] = {"clientId": "waveline-local-desktop" if environment == "local" else "waveline-desktop",
+                           "callbackUrl": "http://127.0.0.1:43821/callback", "callbackPort": 43821}
         require(read_json(folder / ".mcp.json") == {
-            "mcpServers": {name: {"type": "http", "url": config["url"]}}
+            "mcpServers": {name: server}
         }, f"MCP config must match environment and contain no credentials or extra servers: {name}")
         for platform, manifest_dir in PLATFORMS.items():
             manifest = read_json(folder / manifest_dir / "plugin.json")

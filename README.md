@@ -56,21 +56,29 @@ claude plugin validate --strict .claude-plugin/marketplace.json
 
 - [Environment URLs and isolation](docs/environments.md)
 - [OpenAI registration and local marketplace](docs/openai.md)
+- [Hosted ChatGPT local connection and verification](docs/hosted-chatgpt.md)
 - [Claude plugin and hosted connector setup](docs/claude.md)
 - [CI, GitHub setup, and releases](docs/ci.md)
 - [Production listing draft](plugins/waveline/submission/listing.md)
+- [Public submission process and readiness](docs/public-submission.md)
 - [Unexecuted hosted review scenarios](plugins/waveline/submission/reviewer-cases.json)
 
-ChatGPT registrations and their real `plugin_asdk_app...` IDs are still pending.
-Native Claude Code/Codex OAuth registration is also pending: the existing hosted
-client IDs cannot be reused with arbitrary native callback URLs. See the setup
-guides before installing or advertising compatibility.
+The local hosted ChatGPT registration and a read-only connection/inbox smoke test
+are verified; see the linked testing guide for results. Account-specific IDs are
+retained privately. Other
+environment registrations and public submission remain pending.
+The local desktop package has a separate pre-registered OAuth client. The other
+packages now declare `waveline-desktop`, whose backend registration is prepared
+for deployment; see [native OAuth](docs/native-desktop-oauth.md).
+Live native and hosted verification remain environment-specific.
+Hosted client IDs cannot be reused with arbitrary native callback URLs. See the
+setup guides before installing or advertising compatibility.
 
 All environments authorize independently. An accepted external recipient send
 adds US$0.01 before tax to workspace billing; existing messaging charges may also
 apply. The backend owns charging and retry deduplication. Plugin configuration
 does not create a payment transaction per message or sandbox a carrier send.
 
-The original personal packages under `C:/Users/Maksi/plugins` and the existing
-personal marketplace remain unchanged. Use this repository as the source for
+Original personal plugin copies and the existing personal marketplace remain
+unchanged. Use this repository as the source for
 future package edits; those old copies will not update automatically.

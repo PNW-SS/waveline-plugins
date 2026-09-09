@@ -2,7 +2,12 @@
   "mcpServers": {
     "waveline-local": {
       "type": "http",
-      "url": "https://maksim-workers.pnw-devs.com/mcp"
+      "url": "https://maksim-workers.pnw-devs.com/mcp",
+      "oauth": {
+        "clientId": "waveline-local-desktop",
+        "callbackUrl": "http://127.0.0.1:43821/callback",
+        "callbackPort": 43821
+      }
     }
   }
 }

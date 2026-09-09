@@ -41,19 +41,15 @@ its own plugin/connector setup UI; verify the actual OAuth flow on that surface.
 
 ## Native authentication prerequisite
 
-The inspected backend only pre-registers hosted ChatGPT and Claude callbacks.
-It has no dynamic client registration or Client ID Metadata Document support;
-its client ID validation also excludes URL-form client IDs. Its production
-redirect policy does not currently accept native loopback callbacks.
-
-Consequently, installing this package is not enough to complete native Claude
-Code login. The main backend implementation must support the chosen native
-registration mechanism and exact callback flow with PKCE and resource binding.
-For pre-registered native clients, Claude supports an `oauth.clientId` and
-`oauth.callbackPort` configuration, but these must correspond to an actual
-approved backend registration. No fabricated native client is included here.
-Do not reuse `waveline-claude` with a native callback or bypass OAuth using a
-hard-coded bearer token. These backend changes are outside this packaging repo.
+The backend now implements the dedicated `waveline-desktop` public client for
+production, alpha, and staging, with exact loopback callbacks and S256 PKCE.
+The packages supply `oauth.clientId` and `oauth.callbackPort` for that flow.
+Deploy the matching backend change and verify live login before advertising
+native compatibility. See [native desktop OAuth](native-desktop-oauth.md).
+Do not reuse `waveline-claude` with a native callback or embed bearer tokens.
+Dynamic registration and Client ID Metadata Documents remain unsupported.
+The hosted directory needs the separate
+[directory OAuth registration](claude-directory-registration.md).
 
 ## Public distribution
 

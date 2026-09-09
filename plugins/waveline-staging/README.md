@@ -18,10 +18,10 @@ same operation key and arguments when retrying an uncertain send.
 
 This package is not a public listing or proof of live connectivity. Hosted
 ChatGPT developer registration is pending. Hosted Claude uses a separate custom
-connector setup. Native Claude Code/Codex OAuth compatibility is pending because
-the current backend registration only includes hosted platform callbacks.
-The backend must support the target client's registration and callback flow
-before native login can work. Never embed tokens in this package.
+connector setup. This package declares the dedicated `waveline-desktop` public
+client with port 43821. Deploy the matching backend registration and verify
+native Claude Code/Codex login before advertising compatibility. Hosted clients
+keep separate registrations. Never embed tokens in this package.
 
 The source folder contains manifests for both OpenAI and Claude, sharing one
 `.mcp.json`. Release archives include only their target platform's manifest.

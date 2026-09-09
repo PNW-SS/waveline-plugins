@@ -7,9 +7,9 @@ Server: `https://api.waveline.tel/mcp`. Use only this environment's account and 
 2. For hosted Claude, add this URL as a custom connector. The current registered
    hosted client is `waveline-claude`, without a client secret, with callback
    `https://claude.ai/api/mcp/auth_callback`. Confirm deployed configuration first.
-3. For Claude Code, native OAuth support is currently pending in the backend.
-   Do not substitute the hosted client ID with a native callback. Once the backend
-   supports the actual native client and redirect flow, use `/mcp` to authenticate.
+3. For Claude Code, this package uses `waveline-desktop` with callback port 43821.
+   Deploy the matching backend registration, then use `/mcp` to authenticate.
+   Do not substitute the hosted client ID with a native callback.
    Verify Cowork's actual OAuth flow independently before claiming compatibility.
 4. Sign in to Waveline and select Workspace or one permitted inbox, starting with
    read permissions. Read connection details and a known synthetic record.

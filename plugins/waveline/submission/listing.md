@@ -7,6 +7,15 @@ released service before making publisher attestations.
 
 **Name:** Waveline
 
+**Publisher:** PNW Software Solutions LLC
+
+**Support/review contact:** support@pnwsoftwaresolutions.com
+
+**Initial availability:** United States only
+
+**Setup documentation:** https://waveline.tel/support/docs/ai-integrations
+(prepared locally; deploy and verify before submission).
+
 **Tagline:** Review customer calls, contacts, and messages.
 
 **Description:** Connect Waveline to find contacts, review customer calls and text
@@ -44,6 +53,9 @@ The currently configured public clients serve custom hosted connections. Confirm
 the chosen client registration with each directory. Anthropic-held credentials
 are a supported directory option and require an operator-created client secret;
 such a secret must be provisioned privately and never placed in this package.
+The native `waveline-desktop` public registration and package settings are
+prepared in source, using exact port 43821 loopback callbacks. A private Claude
+directory credential draft also exists, but is not registered with either side.
 Codex/Claude Code native client support must be independently verified before
 listing those surfaces. The public OpenAI directory is shared with Codex, so
 discuss or satisfy the intended surface compatibility during review.
@@ -66,17 +78,30 @@ handling and retention. This draft does not invent retention or compliance claim
 
 - Production release with MCP/OAuth enabled and reachable over public HTTPS.
 - A verified publisher identity consistent with Waveline's legal entity.
-- Confirmed public website, support contact, privacy policy, terms and setup guide.
-  These values were not provided and have intentionally not been fabricated.
+- Public URLs checked September 9, 2026: [website](https://waveline.tel),
+  [support](https://waveline.tel/support), [privacy](https://waveline.tel/privacy),
+  and [terms](https://waveline.tel/terms), all HTTP 200. Confirm policy coverage
+  for this integration and publish a plugin-specific setup guide.
+- Marketing edits reconcile the footer to PNW Software Solutions LLC, add the
+  setup guide and support address, and expand integration policy coverage.
+  Review and deploy them with the integration release.
 - Final OAuth registration for each target platform and callback verification.
-- A reviewer account containing synthetic data and safe reproducible fixtures.
-  Never share production credentials or local development bypass codes.
+- The owner supplied a synthetic reviewer account for production, alpha, and
+  staging (not local). Production sign-in succeeded with the supplied OTP;
+  verify tenant isolation, permissions, and reproducible fixture coverage before
+  submission. Credentials belong only in private reviewer fields, not this
+  listing, repository files, or public packages.
 - A review environment that can exercise paid-send behavior without contacting
   real customers. Coordinate any requested hosted reviewer sign-in flow with the
   product's authentication implementation; do not weaken production login.
 - Execute the included scenarios on the intended hosted surfaces and record results.
-- Approved branding and allowed regions; the supplied SVGs reuse the app's existing
+- Use the confirmed United States-only region. The supplied SVGs reuse the app's existing
   wave path, with system font fallback for the wordmark.
+- New publisher-account readiness: OpenAI requires a default payment method and
+  business verification before creating the draft. Claude Console Admin access
+  is confirmed; its new-account form requires directory-terms acceptance.
+- Publish the reviewed existing `PNW-SS/waveline-plugins` repository as requested;
+  the license remains undecided. The repository is currently private.
 
 ## Submission paths
 
@@ -98,3 +123,8 @@ prerequisites and the distinction between the two directories.
 - [Claude plugin submission](https://claude.com/docs/plugins/submit)
 
 No submission or legal attestation has been made by creating this draft.
+
+See [public submission readiness](../../../docs/public-submission.md) for the
+current portal links, verified checks, and remaining work. Production MCP and
+OAuth discovery returned HTTP 404 on September 9, 2026, so this draft is not yet
+ready to submit.

@@ -2,7 +2,12 @@
   "mcpServers": {
     "waveline-alpha": {
       "type": "http",
-      "url": "https://alpha-api.pnwsoftwaresolutions.com/mcp"
+      "url": "https://alpha-api.pnwsoftwaresolutions.com/mcp",
+      "oauth": {
+        "clientId": "waveline-desktop",
+        "callbackUrl": "http://127.0.0.1:43821/callback",
+        "callbackPort": 43821
+      }
     }
   }
 }

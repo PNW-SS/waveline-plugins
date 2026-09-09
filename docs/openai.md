@@ -6,13 +6,19 @@ register a hosted ChatGPT connection or publish a public listing.
 
 ## Hosted ChatGPT
 
-1. Release and enable the intended environment's MCP/OAuth server separately.
+For the local development connection, use the exact values and verification
+steps in [Hosted ChatGPT local testing](hosted-chatgpt.md). Installing the personal
+desktop package does not create this hosted connection.
+
+1. Ensure the intended environment's MCP/OAuth server is enabled and reachable
+   over public HTTPS. Local testing uses the existing development tunnel.
 2. In ChatGPT developer mode, add the environment's MCP URL with OAuth. The
    current hosted public client is `waveline-chatgpt`, without a client secret;
    verify it against the deployed registration if the operator has overridden it.
 3. Authorize the intended workspace or inbox, starting with read permissions.
 4. Record the actual connection's technical `plugin_asdk_app...` identifier.
-   Registration is pending, so no `.app.json` or invented IDs are included.
+   The local hosted registration is recorded in the testing guide. Other
+   environment registrations remain pending; no `.app.json` binding is included.
 5. Once the real ID is available, add the platform's documented `.app.json`
    binding and update the OpenAI manifest and packaging validator/build allowlist
    together. Do not load the same tools twice through direct MCP and app wiring.
