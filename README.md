@@ -4,6 +4,10 @@ Connect Waveline to your AI assistant to find contacts, review customer calls an
 messages, and read saved transcripts and summaries. Optional permissions allow
 contact updates, notes, and explicitly approved text messages.
 
+When supported by the connected service, you can also ask for calls by saved
+sentiment—for example, “Show calls with negative sentiment from last week.”
+See the [sentiment search details](plugins/waveline/README.md#find-calls-by-sentiment).
+
 This repository contains the production Waveline plugin for Claude Code and
 OpenAI-compatible clients. The service endpoint is `https://api.waveline.tel/mcp`.
 Directory availability and client compatibility depend on the released service;

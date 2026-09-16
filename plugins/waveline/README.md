@@ -5,6 +5,19 @@ review external calls and messages, and read saved transcripts and summaries.
 Optional write permissions let you update contacts, add notes, and send approved
 text messages.
 
+## Find calls by sentiment
+
+With a service version that supports sentiment search, ask “Show calls with
+negative sentiment from last week” or “Find mixed-sentiment calls for this
+customer.” The assistant can filter calls by saved `positive`, `negative`,
+`neutral`, or `mixed` sentiment and inspect the matching recordings.
+
+A call matches when at least one recording you may access has that label.
+Sentiment describes the whole recorded conversation, not just the customer;
+different recordings of one call can have different labels. Calls without a
+saved result do not match a sentiment filter. Missing sentiment does not mean
+neutral. Searching reads existing results and does not generate new analysis.
+
 ## Permissions and charges
 
 Sign in to Waveline and select Workspace or one permitted inbox. Start with
