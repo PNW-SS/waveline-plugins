@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "waveline-staging": {
-      "type": "http",
-      "url": "https://staging-api.pnwsoftwaresolutions.com/mcp"
-    }
-  }
-}
