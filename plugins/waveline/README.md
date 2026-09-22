@@ -18,12 +18,45 @@ different recordings of one call can have different labels. Calls without a
 saved result do not match a sentiment filter. Missing sentiment does not mean
 neutral. Searching reads existing results and does not generate new analysis.
 
+Both plugin packages include a [call sentiment skill](skills/call-sentiment/SKILL.md)
+that maps "bad sentiment" to negative and "good sentiment" to positive, checks
+the matching recordings, and distinguishes conversation sentiment from customer
+satisfaction. Clients that connect only to the MCP URL do not receive this bundled
+skill; they use the service's tool descriptions instead.
+
+The bundled [call contact names skill](skills/call-contact-names/SKILL.md) makes
+contact names the primary labels for call results. It looks up distinct phone
+numbers, identifies duplicate contact matches without guessing, and falls back
+to numbers when a name is unavailable.
+
 ## Permissions and charges
 
-Sign in to Waveline and select Workspace or one permitted inbox. Start with
-read-only access and grant additional permissions only when needed.
-Contact visibility follows the approved access. Internal-only communications
-are excluded.
+The [inbox hours skill](skills/inbox-hours/SKILL.md) uses the connected settings
+tools for weekly hours, lunch breaks, and public-holiday closures when the backend
+supports them. It preserves existing exceptions and reports missing capabilities
+instead of switching to browser automation. Managing hours requires the optional
+inbox-settings write permission; adding this skill does not expand access.
+
+The [management skill](skills/manage-waveline/SKILL.md) covers primary numbers,
+your default inbox and availability, recording and disclosure switches, ring
+groups, validated call-flow drafts/publication, and contact sharing. Web/Mobile
+and Deskphone are the supported ring methods. CRM-owned contacts keep their
+integration-managed details and audience; notes remain available. Contact
+deletion and merging are not exposed.
+
+For inbox details audio, the management skill can generate and apply inbound
+recording disclosures, outbound recording disclosures, and the default voicemail
+greeting. Custom hold music is excluded. It checks the current recording before
+replacement and treats disclosure switches and call-flow overrides separately.
+
+Sign in to Waveline and approve the permissions needed. The assistant follows
+your current Waveline access, including permitted internal communications.
+In ChatGPT, you can connect more than one Waveline account from the plugin's
+settings. Use **Switch Waveline account** on the consent page when adding a
+different account, and name the intended account or workspace in your request.
+Start read-only and grant optional contact, messaging or inbox management
+permissions only when needed. New capabilities also require service support;
+installing instructions alone does not enable backend operations.
 
 Before sending, approve the sending inbox, recipient, exact text, and charge.
 Each accepted external recipient send costs US$0.01 before tax; existing

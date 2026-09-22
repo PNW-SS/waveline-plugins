@@ -14,5 +14,5 @@
     "customer-support"
   ],
   "displayName": "Waveline",
-  "mcpServers": "./.mcp.json"
+  "mcpServers": "./.mcp.claude.json"
 }

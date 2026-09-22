@@ -64,14 +64,30 @@ class PackagingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing"):
             package.validate(self.root)
 
+    def test_missing_sentiment_skill_rejected(self):
+        (self.root / "plugins/waveline/skills/call-sentiment/SKILL.md").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing"):
+            package.validate(self.root)
+
+    def test_missing_contact_names_skill_rejected(self):
+        (self.root / "plugins/waveline/skills/call-contact-names/SKILL.md").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing"):
+            package.validate(self.root)
+
     def test_marketplace_escape_rejected(self):
         self.change(".claude-plugin/marketplace.json", lambda d: d["plugins"][0].update(source="../waveline"))
         with self.assertRaisesRegex(ValueError, "marketplace source"):
             package.validate(self.root)
 
+    def test_missing_inbox_hours_skill_rejected(self):
+        (self.root / "plugins/waveline/skills/inbox-hours/SKILL.md").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing"):
+            package.validate(self.root)
+
     def test_archives_deterministic_isolated_and_checksummed(self):
         # An accidentally present local credential file must never enter an archive.
         (self.root / "plugins/waveline/.env").write_text("SYNTHETIC_SECRET=do-not-package")
+        (self.root / "plugins/waveline/skills/call-sentiment/.env").write_text("SYNTHETIC_SECRET=do-not-package")
         first = {p.name: p.read_bytes() for p in package.build(self.root)}
         second = {p.name: p.read_bytes() for p in package.build(self.root)}
         self.assertEqual(first, second)
@@ -80,7 +96,15 @@ class PackagingTests(unittest.TestCase):
             with zipfile.ZipFile(self.root / "dist" / name) as archive:
                 self.assertIsNone(archive.testzip())
                 files = archive.namelist()
-                self.assertIn(".mcp.json", files)
+                own_mcp = ".mcp.claude.json" if "-claude-" in name else ".mcp.json"
+                other_mcp = ".mcp.json" if own_mcp == ".mcp.claude.json" else ".mcp.claude.json"
+                self.assertIn(own_mcp, files)
+                self.assertNotIn(other_mcp, files)
+                self.assertIn("skills/call-sentiment/SKILL.md", files)
+                self.assertIn("skills/call-contact-names/SKILL.md", files)
+                self.assertIn("skills/inbox-hours/SKILL.md", files)
+                self.assertIn("skills/manage-waveline/SKILL.md", files)
+                self.assertNotIn("skills/call-sentiment/.env", files)
                 own = ".claude-plugin" if "-claude-" in name else ".codex-plugin"
                 other = ".codex-plugin" if own == ".claude-plugin" else ".claude-plugin"
                 self.assertIn(own + "/plugin.json", files)

@@ -4,7 +4,7 @@
       "type": "http",
       "url": "https://api.waveline.tel/mcp",
       "oauth": {
-        "clientId": "waveline-codex",
+        "clientId": "waveline-claude-code",
         "callbackUrl": "http://127.0.0.1:43821/callback",
         "callbackPort": 43821
       }

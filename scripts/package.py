@@ -30,7 +30,12 @@ def local_file(folder, relative):
 
 def package_files(folder, platform):
     """Explicit allowlist prevents credentials and other host bindings entering archives."""
-    paths = [folder / PLATFORMS[platform] / "plugin.json", folder / ".mcp.json", folder / "README.md"]
+    mcp_file = ".mcp.json" if platform == "openai" else ".mcp.claude.json"
+    paths = [folder / PLATFORMS[platform] / "plugin.json", folder / mcp_file, folder / "README.md"]
+    paths.append(folder / "skills" / "call-sentiment" / "SKILL.md")
+    paths.append(folder / "skills" / "call-contact-names" / "SKILL.md")
+    paths.append(folder / "skills" / "inbox-hours" / "SKILL.md")
+    paths.append(folder / "skills" / "manage-waveline" / "SKILL.md")
     paths += sorted((folder / "assets").glob("*.svg"))
     if platform == "claude":
         paths.append(folder / "SETUP.md")
@@ -59,19 +64,21 @@ def validate(root=ROOT, tag=None):
         names.append(name)
         urls.append(config["url"])
         folder = root / "plugins" / name
-        server = {"type": "http", "url": config["url"]}
-        server["oauth"] = {"clientId": "waveline-desktop",
-                           "callbackUrl": "http://127.0.0.1:43821/callback", "callbackPort": 43821}
-        require(read_json(folder / ".mcp.json") == {
-            "mcpServers": {name: server}
-        }, f"MCP config must match environment and contain no credentials or extra servers: {name}")
         for platform, manifest_dir in PLATFORMS.items():
+            mcp_file = ".mcp.json" if platform == "openai" else ".mcp.claude.json"
+            client_id = "waveline-codex" if platform == "openai" else "waveline-claude-code"
+            server = {"type": "http", "url": config["url"]}
+            server["oauth"] = {"clientId": client_id,
+                               "callbackUrl": "http://127.0.0.1:43821/callback", "callbackPort": 43821}
+            require(read_json(folder / mcp_file) == {
+                "mcpServers": {name: server}
+            }, f"MCP config must match environment and contain no credentials or extra servers: {name}/{platform}")
             manifest = read_json(folder / manifest_dir / "plugin.json")
             allowed = {"name", "version", "description", "author", "keywords", "mcpServers"}
             allowed |= {"interface"} if platform == "openai" else {"displayName"}
             require(set(manifest) <= allowed, f"Unexpected manifest fields in {platform}/{name}; review validator when adding capabilities")
             require(manifest["name"] == name and manifest["version"] == version, f"Name/version mismatch: {platform}/{name}")
-            require(manifest["mcpServers"] == "./.mcp.json", "MCP reference must use shared config")
+            require(manifest["mcpServers"] == f"./{mcp_file}", "MCP reference must use its platform config")
             require(manifest["description"].strip() and manifest["author"]["name"] == "Waveline", "Missing description/author")
             display = manifest["interface"]["displayName"] if platform == "openai" else manifest["displayName"]
             expected = "Waveline"

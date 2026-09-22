@@ -23,6 +23,20 @@ Where your account and organization allow custom MCP connections:
    from the chosen inbox. Messages sent through the assistant appear under
    your name.
 
+### Connect multiple Waveline accounts
+
+In Waveline's ChatGPT plugin settings, add another account and repeat the OAuth
+sign-in for each Waveline account you want to use. If the consent page shows an
+account you already connected, choose **Switch Waveline account**, sign in to
+the other account, and then review its permissions. The pending connection
+request returns to the consent page after sign-in.
+
+ChatGPT identifies each connection using the signed-in Waveline account's
+stable profile ID and displays its name, email, and workspace label when
+available. Each tool call uses the selected connection's own permissions.
+Specify the intended account or workspace when asking the assistant to read
+or change Waveline data, especially before sending a message.
+
 ### Sending permission missing from consent
 
 A request containing only `calls.read`, `contacts.read`, `inboxes.read`, and
@@ -41,7 +55,7 @@ US$0.01 before tax; existing messaging charges may also apply.
 
 The hosted connector's OAuth request configuration is managed outside this
 repository. Its owner must update the requested scopes through the configuration
-used to register that connector. Changing the desktop `waveline-desktop` client
+used to register that connector. Changing the desktop `waveline-codex` client
 in `plugins/waveline/.mcp.json` does not change requests from hosted ChatGPT's
 `waveline-chatgpt` client.
 
