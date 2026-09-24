@@ -18,11 +18,14 @@ for the saved sentiment field, and do not access the database directly.
 
 ## Search and inspect
 
-1. Resolve the requested period in the user's known timezone. Use explicit
-   timezone-qualified `created_after` and `created_before` values with
-   `list_calls`, plus the chosen `sentiment`. "Past week" means the trailing
-   seven days. Preserve filters when following `next_cursor`; do not describe
-   a partial page as the complete result.
+1. Resolve the requested period in the person's timezone (`timezone` from
+   `get_connection`). Use explicit timezone-qualified `created_after` and
+   `created_before` values with `list_calls`, plus the chosen `sentiment`.
+   "Past week" means the trailing seven days. Add `inbox_id`, `employee_id` or
+   `direction` when the user names an inbox, teammate or direction (see the
+   [find calls and messages guidance](../find-calls-and-messages/SKILL.md)).
+   Preserve filters when following `next_cursor`; do not describe a partial
+   page as the complete result.
 2. For each call being presented, use `list_call_recordings` to identify the
    accessible recording(s) with the requested saved `sentiment`. Follow its
    pagination as needed. A call matches if at least one accessible recording

@@ -36,6 +36,7 @@ def package_files(folder, platform):
     paths.append(folder / "skills" / "call-contact-names" / "SKILL.md")
     paths.append(folder / "skills" / "inbox-hours" / "SKILL.md")
     paths.append(folder / "skills" / "manage-waveline" / "SKILL.md")
+    paths.append(folder / "skills" / "find-calls-and-messages" / "SKILL.md")
     paths += sorted((folder / "assets").glob("*.svg"))
     if platform == "claude":
         paths.append(folder / "SETUP.md")

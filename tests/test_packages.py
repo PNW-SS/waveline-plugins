@@ -79,6 +79,11 @@ class PackagingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "marketplace source"):
             package.validate(self.root)
 
+    def test_missing_calls_and_messages_skill_rejected(self):
+        (self.root / "plugins/waveline/skills/find-calls-and-messages/SKILL.md").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing"):
+            package.validate(self.root)
+
     def test_missing_inbox_hours_skill_rejected(self):
         (self.root / "plugins/waveline/skills/inbox-hours/SKILL.md").unlink()
         with self.assertRaisesRegex(ValueError, "Missing"):
@@ -104,6 +109,7 @@ class PackagingTests(unittest.TestCase):
                 self.assertIn("skills/call-contact-names/SKILL.md", files)
                 self.assertIn("skills/inbox-hours/SKILL.md", files)
                 self.assertIn("skills/manage-waveline/SKILL.md", files)
+                self.assertIn("skills/find-calls-and-messages/SKILL.md", files)
                 self.assertNotIn("skills/call-sentiment/.env", files)
                 own = ".claude-plugin" if "-claude-" in name else ".codex-plugin"
                 other = ".codex-plugin" if own == ".claude-plugin" else ".claude-plugin"

@@ -1,7 +1,7 @@
 {
   "name": "waveline",
   "version": "0.1.0",
-  "description": "Find Waveline contacts, review customer calls and messages, and send explicitly approved text messages.",
+  "description": "Ask about Waveline calls, missed calls, voicemails, texts and contacts by inbox, teammate or customer; review transcripts and call analytics; manage inbox settings; and send explicitly approved text messages.",
   "author": {
     "name": "Waveline"
   },

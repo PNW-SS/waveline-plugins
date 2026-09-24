@@ -35,7 +35,8 @@ request with a new key. Report success only after a successful tool result.
 
 ## Ringing and recording
 
-Read `get_inbox_ringing` before `update_inbox_ringing`. Groups ring in their saved
+Resolve a teammate the user names with `list_members` (its `user_id` is the
+ring-group user ID). Read `get_inbox_ringing` before `update_inbox_ringing`. Groups ring in their saved
 order; users within a group ring together. Each group has a duration in seconds
 and at most ten enabled dial methods. Reordering groups must retain their users,
 durations and device selections unless the user requested those changes.
@@ -221,6 +222,11 @@ owner or an authorized admin/owner who can already read the contact. Workspace
 sharing exposes it across the workspace; inbox sharing retains the owner's
 personal inbox. Obtain authorization for the intended audience. CRM-owned
 contact access follows its integration and cannot be changed individually.
+
+Custom fields: read `list_contact_property_definitions` for the field's
+`property_id`, type and options, then `list_contact_properties` for current
+values. Change one field with `set_contact_property` after authorization.
+`value: null` clears it. CRM-owned contacts keep integration-managed fields.
 
 Use `list_contact_notes` and `add_contact_note` for notes. Existing notes are
 append-only in the user interface. Contact deletion, merging, ownership changes,

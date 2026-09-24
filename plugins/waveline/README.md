@@ -1,9 +1,26 @@
 # Waveline
 
-Connect to Waveline at `https://api.waveline.tel/mcp` to find permitted contacts,
-review external calls and messages, and read saved transcripts and summaries.
-Optional write permissions let you update contacts, add notes, and send approved
-text messages.
+Connect to Waveline at `https://api.waveline.tel/mcp` to ask about calls, text
+conversations and contacts, read saved transcripts and summaries, and review call
+analytics. Optional write permissions let you update contacts and their custom
+fields, add notes, manage inbox settings, and send approved text messages.
+
+## Ask about calls and messages
+
+Ask the way you would ask a teammate. The assistant looks up the inbox, teammate
+or customer you name, then filters on the server:
+
+- “Show today's calls to Dispatch.” “Any missed calls or voicemails this morning?”
+- “Which calls did Sam answer this week?” “What was my last call?”
+- “Who texted me today?” “Which conversations are waiting for a reply?”
+- “Show everything with Jamie Rivera.”
+
+Calls and messages come back newest first and already carry the matched contact
+names and inbox names. Dates are read in your timezone, taken from your default
+inbox's business hours. The bundled
+[calls and messages skill](skills/find-calls-and-messages/SKILL.md) covers how
+names become filters. Clients that connect only to the MCP URL get the same
+guidance from the tool descriptions.
 
 ## Find calls by sentiment
 

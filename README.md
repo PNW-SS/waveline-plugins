@@ -1,8 +1,10 @@
 # Waveline plugins
 
-Connect Waveline to your AI assistant to find contacts, review customer calls and
-messages, and read saved transcripts and summaries. Optional permissions allow
-contact updates, notes, and explicitly approved text messages.
+Connect Waveline to your AI assistant to ask about calls, missed calls,
+voicemails, text conversations and contacts by inbox, teammate or customer, and
+to read saved transcripts, summaries and call analytics. Optional permissions
+allow contact updates, notes, inbox settings management, and explicitly
+approved text messages.
 
 When supported by the connected service, you can also ask for calls by saved
 sentiment—for example, “Show calls with negative sentiment from last week.”
