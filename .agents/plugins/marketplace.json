@@ -15,42 +15,6 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
-    },
-    {
-      "name": "waveline-alpha",
-      "source": {
-        "source": "local",
-        "path": "./plugins/waveline-alpha"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "waveline-staging",
-      "source": {
-        "source": "local",
-        "path": "./plugins/waveline-staging"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "waveline-local",
-      "source": {
-        "source": "local",
-        "path": "./plugins/waveline-local"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
     }
   ]
 }

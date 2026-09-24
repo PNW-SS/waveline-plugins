@@ -1,0 +1,19 @@
+{
+  "name": "waveline-plugins",
+  "displayName": "Waveline",
+  "owner": {
+    "name": "Waveline",
+    "email": "support@pnwsoftwaresolutions.com"
+  },
+  "metadata": {
+    "description": "Waveline production communication integration for Cursor and Grok Bot."
+  },
+  "plugins": [
+    {
+      "name": "waveline",
+      "source": "./plugins/waveline",
+      "description": "Ask about Waveline calls, texts and contacts; review transcripts and call analytics; and send explicitly approved texts.",
+      "logo": "assets/logo.svg"
+    }
+  ]
+}

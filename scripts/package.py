@@ -30,7 +30,13 @@ def local_file(folder, relative):
 
 def package_files(folder, platform):
     """Explicit allowlist prevents credentials and other host bindings entering archives."""
-    paths = [folder / PLATFORMS[platform] / "plugin.json", folder / ".mcp.json", folder / "README.md"]
+    mcp_file = ".mcp.codex.json" if platform == "openai" else ".mcp.claude.json"
+    paths = [folder / PLATFORMS[platform] / "plugin.json", folder / mcp_file, folder / "README.md"]
+    paths.append(folder / "skills" / "call-sentiment" / "SKILL.md")
+    paths.append(folder / "skills" / "call-contact-names" / "SKILL.md")
+    paths.append(folder / "skills" / "inbox-hours" / "SKILL.md")
+    paths.append(folder / "skills" / "manage-waveline" / "SKILL.md")
+    paths.append(folder / "skills" / "find-calls-and-messages" / "SKILL.md")
     paths += sorted((folder / "assets").glob("*.svg"))
     if platform == "claude":
         paths.append(folder / "SETUP.md")
@@ -40,16 +46,54 @@ def package_files(folder, platform):
     return sorted(paths)
 
 
+# Git-installed manifests: Grok Build (xai-org/plugin-marketplace) and Cursor, whose
+# marketplace also feeds Grok Bot. Neither uses a ZIP.
+GIT_PLATFORMS = {
+    "grok": (".grok-plugin", "./.mcp.json", {"homepage", "repository", "license", "logo"}),
+    "cursor": (".cursor-plugin", "./mcp.json", {"displayName", "homepage", "repository", "license", "logo", "category", "tags", "skills"}),
+}
+
+
+def validate_git_platforms(root, folder, name, url, version):
+    """These clients get their OAuth client from the server's registration endpoint,
+    so every config they might load carries only the production URL. Cursor and
+    Grok Bot can load `.mcp.json` even when the manifest names `mcp.json`, so both
+    must be identical (desktop clients use their own named files)."""
+    for mcp_file in (".mcp.json", "mcp.json"):
+        require(read_json(folder / mcp_file) == {"mcpServers": {name: {"type": "http", "url": url}}},
+                f"MCP config must match environment and contain no credentials or extra servers: {name}/{mcp_file}")
+    for platform, (manifest_dir, mcp_file, extra) in GIT_PLATFORMS.items():
+        manifest = read_json(folder / manifest_dir / "plugin.json")
+        allowed = {"name", "version", "description", "author", "keywords", "mcpServers"} | extra
+        require(set(manifest) <= allowed, f"Unexpected manifest fields in {platform}/{name}; review validator when adding capabilities")
+        require(manifest["name"] == name and manifest["version"] == version, f"Name/version mismatch: {platform}/{name}")
+        require(manifest["mcpServers"] == mcp_file, "MCP reference must use its platform config")
+        require(manifest["description"].strip() and manifest["author"]["name"] == "Waveline", "Missing description/author")
+        require(manifest.get("displayName", "Waveline") == "Waveline", f"Wrong environment display name: {name}")
+        require(manifest.get("skills", "./skills") == "./skills", "Skills must be the bundled folder")
+        require(manifest.get("license") == "Apache-2.0" and (root / "LICENSE").is_file(), f"Missing Apache-2.0 license: {platform}/{name}")
+        logo = local_file(folder, f"./{manifest['logo']}")
+        require(logo.parent == folder / "assets" and logo.suffix == ".svg", "Assets must be bundled SVGs")
+    # Keywords drive Grok Build's plugin suggestions; xAI requires brand-scoped terms.
+    keywords = read_json(folder / ".grok-plugin" / "plugin.json")["keywords"]
+    require(keywords and all(keyword.startswith("waveline") for keyword in keywords), "Grok keywords must be Waveline-scoped")
+    marketplace = read_json(root / ".cursor-plugin" / "marketplace.json")
+    require(marketplace["name"] == "waveline-plugins", "Wrong marketplace name")
+    require([(entry["name"], entry["source"]) for entry in marketplace["plugins"]] == [(name, f"./plugins/{name}")],
+            "Wrong Cursor marketplace source")
+
+
 def validate(root=ROOT, tag=None):
     version = (root / "VERSION").read_text().strip()
     require(re.fullmatch(r"\d+\.\d+\.\d+", version), "VERSION must be a stable x.y.z version")
     if tag is not None:
         require(tag == f"v{version}", "Release tag must match VERSION")
     environments = read_json(root / "environments.json")
-    require(set(environments) == {"production", "alpha", "staging", "local"}, "Expected four environments")
+    require(environments == {"production": {"plugin": "waveline", "url": "https://api.waveline.tel/mcp"}},
+            "Only the production Waveline configuration is allowed")
     names, urls = [], []
     for environment, config in environments.items():
-        name = "waveline" if environment == "production" else f"waveline-{environment}"
+        name = "waveline"
         require(config["plugin"] == name, f"Wrong plugin name for {environment}")
         url = urlsplit(config["url"])
         require(url.scheme == "https" and url.hostname and url.path == "/mcp"
@@ -58,28 +102,37 @@ def validate(root=ROOT, tag=None):
         names.append(name)
         urls.append(config["url"])
         folder = root / "plugins" / name
-        require(read_json(folder / ".mcp.json") == {
-            "mcpServers": {name: {"type": "http", "url": config["url"]}}
-        }, f"MCP config must match environment and contain no credentials or extra servers: {name}")
         for platform, manifest_dir in PLATFORMS.items():
+            mcp_file = ".mcp.codex.json" if platform == "openai" else ".mcp.claude.json"
+            client_id = "waveline-codex" if platform == "openai" else "waveline-claude-code"
+            server = {"type": "http", "url": config["url"]}
+            server["oauth"] = {"clientId": client_id,
+                               "callbackUrl": "http://127.0.0.1:43821/callback", "callbackPort": 43821}
+            require(read_json(folder / mcp_file) == {
+                "mcpServers": {name: server}
+            }, f"MCP config must match environment and contain no credentials or extra servers: {name}/{platform}")
             manifest = read_json(folder / manifest_dir / "plugin.json")
             allowed = {"name", "version", "description", "author", "keywords", "mcpServers"}
             allowed |= {"interface"} if platform == "openai" else {"displayName"}
             require(set(manifest) <= allowed, f"Unexpected manifest fields in {platform}/{name}; review validator when adding capabilities")
             require(manifest["name"] == name and manifest["version"] == version, f"Name/version mismatch: {platform}/{name}")
-            require(manifest["mcpServers"] == "./.mcp.json", "MCP reference must use shared config")
+            require(manifest["mcpServers"] == f"./{mcp_file}", "MCP reference must use its platform config")
             require(manifest["description"].strip() and manifest["author"]["name"] == "Waveline", "Missing description/author")
             display = manifest["interface"]["displayName"] if platform == "openai" else manifest["displayName"]
-            expected = "Waveline" if environment == "production" else f"Waveline {environment.title()}"
+            expected = "Waveline"
             require(display == expected, f"Wrong environment display name: {name}")
             if platform == "openai":
                 for key in ("composerIcon", "logo", "logoDark"):
                     asset = local_file(folder, manifest["interface"][key])
                     require(asset.parent == folder / "assets" and asset.suffix == ".svg", "Assets must be bundled SVGs")
             package_files(folder, platform)
+        validate_git_platforms(root, folder, name, config["url"], version)
         require(not (folder / ".app.json").exists(), "Hosted app IDs require explicit registration and binding review")
-    require(len(set(urls)) == 4, "Environments must have distinct URLs")
-    require({p.name for p in (root / "plugins").iterdir()} == set(names), "Unexpected plugin folders")
+    # Git does not track empty directories left behind by a source cleanup.
+    present = {p.name for p in (root / "plugins").iterdir()
+               if p.is_file() or p.is_symlink()
+               or any(child.is_file() or child.is_symlink() for child in p.rglob("*"))}
+    require(present == set(names), "Unexpected plugin folders")
     for platform, relative in [("openai", ".agents/plugins/marketplace.json"), ("claude", ".claude-plugin/marketplace.json")]:
         marketplace = read_json(root / relative)
         require(marketplace["name"] == "waveline-plugins", "Wrong marketplace name")
@@ -134,6 +187,6 @@ if __name__ == "__main__":
             for archive in build():
                 print(archive.relative_to(ROOT))
         else:
-            print("All four environments and both marketplace formats validated.")
+            print("Production plugin, all marketplace formats and the Grok and Cursor manifests validated.")
     except (ValueError, KeyError, TypeError, OSError) as error:
         parser.exit(1, f"Validation failed: {error}\n")

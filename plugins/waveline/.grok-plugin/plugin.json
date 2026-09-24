@@ -3,16 +3,18 @@
   "version": "0.1.0",
   "description": "Ask about Waveline calls, missed calls, voicemails, texts and contacts by inbox, teammate or customer; review transcripts and call analytics; manage inbox settings; and send explicitly approved text messages.",
   "author": {
-    "name": "Waveline"
+    "name": "Waveline",
+    "url": "https://waveline.tel"
   },
+  "homepage": "https://waveline.tel",
+  "repository": "https://github.com/PNW-SS/waveline-plugins",
+  "license": "Apache-2.0",
   "keywords": [
     "waveline",
-    "voip",
-    "calls",
-    "messages",
-    "contacts",
-    "customer-support"
+    "waveline calls",
+    "waveline texts",
+    "waveline mcp"
   ],
-  "displayName": "Waveline",
-  "mcpServers": "./.mcp.claude.json"
+  "logo": "assets/logo.svg",
+  "mcpServers": "./.mcp.json"
 }
