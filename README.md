@@ -10,8 +10,8 @@ When supported by the connected service, you can also ask for calls by saved
 sentiment—for example, “Show calls with negative sentiment from last week.”
 See the [sentiment search details](plugins/waveline/README.md#find-calls-by-sentiment).
 
-This repository contains the production Waveline plugin for Claude Code and
-OpenAI-compatible clients. The service endpoint is `https://api.waveline.tel/mcp`.
+This repository contains the production Waveline plugin for Claude Code,
+OpenAI-compatible clients, Cursor, and Grok (Grok Bot and Grok Build). The service endpoint is `https://api.waveline.tel/mcp`.
 Directory availability and client compatibility depend on the released service;
 this repository alone does not establish a published directory listing.
 
@@ -19,6 +19,7 @@ this repository alone does not establish a published directory listing.
 
 - [Claude setup](docs/claude.md)
 - [OpenAI setup](docs/openai.md)
+- [Grok setup](docs/grok.md)
 - [Plugin permissions and usage](plugins/waveline/README.md)
 
 Sign in to Waveline and approve the permissions you intend to share. The assistant
@@ -46,3 +47,8 @@ See [CI and releases](docs/ci.md).
 
 Public package contributions must exclude operator runbooks, deployment
 configuration, review-account information, and non-production connections.
+
+## License
+
+The plugin packages in this repository are licensed under the [Apache License 2.0](LICENSE).
+Use of the Waveline service is governed by the [Waveline terms](https://waveline.tel/terms).

@@ -56,7 +56,7 @@ US$0.01 before tax; existing messaging charges may also apply.
 The hosted connector's OAuth request configuration is managed outside this
 repository. Its owner must update the requested scopes through the configuration
 used to register that connector. Changing the desktop `waveline-codex` client
-in `plugins/waveline/.mcp.json` does not change requests from hosted ChatGPT's
+in `plugins/waveline/.mcp.codex.json` does not change requests from hosted ChatGPT's
 `waveline-chatgpt` client.
 
 After the requested scopes are corrected, reauthorize the connection and approve
