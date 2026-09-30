@@ -37,6 +37,7 @@ Read `timezone` from `get_connection` once per conversation. Convert "today",
 | Recent or last calls | `list_calls` (newest first by default) |
 | Calls to an inbox | `list_calls` + `inbox_id` |
 | Missed calls / voicemails | `list_calls` + `outcome=missed` / `outcome=voicemail` (+ `direction=inbound`) |
+| Unhandled calls, who still needs a callback | `list_calls` + `unhandled_only=true` (+ `inbox_id`); this is Waveline's own queue, so don't rebuild it from outcomes |
 | Calls a teammate handled | `list_calls` + `employee_id` |
 | A customer's calls or texts | `list_calls` / `list_conversations` + `external_number` |
 | Who texted, what needs a reply | `list_conversations`: `awaiting_reply`, `unread`; `unread_only=true` |
