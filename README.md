@@ -4,14 +4,16 @@ Connect Waveline to your AI assistant to ask about calls, missed calls,
 voicemails, text conversations and contacts by inbox, teammate or customer, and
 to read saved transcripts, summaries and call analytics. Optional permissions
 allow contact updates, notes, inbox settings management, and explicitly
-approved text messages.
+approved external texts and internal Waveline messages.
 
 When supported by the connected service, you can also ask for calls by saved
 sentiment—for example, “Show calls with negative sentiment from last week.”
 See the [sentiment search details](plugins/waveline/README.md#find-calls-by-sentiment).
 
 This repository contains the production Waveline plugin for Claude Code,
-OpenAI-compatible clients, Cursor, and Grok (Grok Bot and Grok Build). The service endpoint is `https://api.waveline.tel/mcp`.
+OpenAI-compatible clients, Cursor, and Grok (Grok Bot and Grok Build). The service
+endpoint is `https://api.waveline.tel/mcp` and requires a host that supports MCP
+`2026-07-28` (MCP 2.0).
 Directory availability and client compatibility depend on the released service;
 this repository alone does not establish a published directory listing.
 
@@ -23,8 +25,13 @@ this repository alone does not establish a published directory listing.
 - [Plugin permissions and usage](plugins/waveline/README.md)
 
 Sign in to Waveline and approve the permissions you intend to share. The assistant
-follows your current Waveline access. Each accepted external recipient send costs US$0.01 before tax;
-existing messaging charges may also apply.
+follows your current Waveline access. Integration pricing is displayed and
+accepted during connection setup: each accepted external recipient send costs
+US$0.01 before tax; existing messaging charges may also apply. The assistant does
+not repeat fee warnings or seek separate fee approval for each send. Your
+authorization for the exact inbox, recipient, and message is still required.
+Internal Waveline messages incur no external SMS integration fee; see
+[internal messaging](plugins/waveline/README.md#send-an-internal-message).
 
 Support: [support@pnwsoftwaresolutions.com](mailto:support@pnwsoftwaresolutions.com).
 See our [website](https://waveline.tel), [privacy policy](https://waveline.tel/privacy),

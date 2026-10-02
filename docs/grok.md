@@ -7,6 +7,8 @@ Grok Build installs from the xAI plugin marketplace
 contain only the production URL. This repository alone does not establish a
 listing in either catalog.
 
+The Waveline endpoint requires a host that supports MCP `2026-07-28` (MCP 2.0).
+
 ## Grok Bot plugin
 
 Once Waveline is listed:
@@ -16,7 +18,9 @@ Once Waveline is listed:
    your current Waveline permissions; role and inbox membership changes change its
    access. Read-only access is selected by default.
 3. To send messages, enable the optional write access on Waveline's consent screen
-   and acknowledge the displayed messaging charge.
+   and accept the displayed integration pricing during connection setup. Each
+   accepted external recipient send costs US$0.01 before tax; existing messaging
+   charges may also apply.
 4. Confirm **Waveline** shows under **Installed**. Every bot on the account can use it.
 
 ## Grok Build plugin
@@ -37,11 +41,21 @@ server directly:
 
 A custom connector provides Waveline's tools but not the plugin's skills.
 
+Sending requires your authorization for the exact inbox, recipient, and text;
+an existing explicit send instruction is sufficient. Pricing accepted at
+connection setup is not repeated as a fee warning or separate approval for each
+send. OAuth consent alone does not authorize messages, and a draft request
+stays a draft.
+
+For messages to teammates or shared inboxes, see
+[internal Waveline messaging](../plugins/waveline/README.md#send-an-internal-message).
+Internal messages incur no external SMS integration fee and require active
+membership in the sending inbox.
+
 ## Network endpoints and credentials
 
 The plugin connects only to `https://api.waveline.tel/mcp`. Authentication is
 Waveline's OAuth flow in your browser: the client registers automatically, Waveline
 answers with its public client and PKCE, and no client secret or API key is issued.
 The plugin runs no local code and does not read local credentials, `.env` files or
-unrelated files. Each accepted external recipient send costs US$0.01 before tax;
-existing messaging charges may also apply.
+unrelated files.

@@ -5,6 +5,11 @@ description: Find Waveline calls with good, bad, positive, negative, neutral, or
 
 # Find calls by saved sentiment
 
+For ongoing requests such as "watch for unhappy customers" or "keep flagging
+negative calls", use [monitor-waveline](../monitor-waveline/SKILL.md) to choose
+events or supported scheduled checks. A one-time sentiment search does not
+establish monitoring, and transcript readiness does not guarantee saved sentiment.
+
 Use Waveline's saved call-recording sentiment analysis through the connected
 Waveline tools. Do not substitute call outcomes, missed calls, or keyword guesses
 for the saved sentiment field, and do not access the database directly.
