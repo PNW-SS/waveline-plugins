@@ -37,6 +37,8 @@ def package_files(folder, platform):
     paths.append(folder / "skills" / "inbox-hours" / "SKILL.md")
     paths.append(folder / "skills" / "manage-waveline" / "SKILL.md")
     paths.append(folder / "skills" / "find-calls-and-messages" / "SKILL.md")
+    paths.append(folder / "skills" / "monitor-waveline" / "SKILL.md")
+    paths.append(folder / "skills" / "auto-replies" / "SKILL.md")
     paths += sorted((folder / "assets").glob("*.svg"))
     if platform == "claude":
         paths.append(folder / "SETUP.md")
@@ -113,7 +115,7 @@ def validate(root=ROOT, tag=None):
             }, f"MCP config must match environment and contain no credentials or extra servers: {name}/{platform}")
             manifest = read_json(folder / manifest_dir / "plugin.json")
             allowed = {"name", "version", "description", "author", "keywords", "mcpServers"}
-            allowed |= {"interface"} if platform == "openai" else {"displayName"}
+            allowed |= {"interface", "skills"} if platform == "openai" else {"displayName"}
             require(set(manifest) <= allowed, f"Unexpected manifest fields in {platform}/{name}; review validator when adding capabilities")
             require(manifest["name"] == name and manifest["version"] == version, f"Name/version mismatch: {platform}/{name}")
             require(manifest["mcpServers"] == f"./{mcp_file}", "MCP reference must use its platform config")
@@ -122,6 +124,9 @@ def validate(root=ROOT, tag=None):
             expected = "Waveline"
             require(display == expected, f"Wrong environment display name: {name}")
             if platform == "openai":
+                require(manifest.get("skills") == "./skills/", "OpenAI skills must expose the bundled ./skills/ folder")
+                skills = folder / "skills"
+                require(skills.is_dir() and not skills.is_symlink(), "Missing or linked skills folder")
                 for key in ("composerIcon", "logo", "logoDark"):
                     asset = local_file(folder, manifest["interface"][key])
                     require(asset.parent == folder / "assets" and asset.suffix == ".svg", "Assets must be bundled SVGs")

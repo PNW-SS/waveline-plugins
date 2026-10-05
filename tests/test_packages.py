@@ -89,6 +89,50 @@ class PackagingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing"):
             package.validate(self.root)
 
+    def test_missing_monitoring_skill_rejected(self):
+        (self.root / "plugins/waveline/skills/monitor-waveline/SKILL.md").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing"):
+            package.validate(self.root)
+
+    def test_missing_auto_replies_skill_rejected(self):
+        (self.root / "plugins/waveline/skills/auto-replies/SKILL.md").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing"):
+            package.validate(self.root)
+
+    def test_openai_skills_directory_rejected(self):
+        manifest = "plugins/waveline/.codex-plugin/plugin.json"
+        for value in (None, [], "./missing-skills/", "./../../skills/"):
+            with self.subTest(value=value):
+                path = self.root / manifest
+                original = path.read_text()
+                self.change(manifest, lambda data: data.pop("skills") if value is None else data.update(skills=value))
+                with self.assertRaisesRegex(ValueError, "skills must expose"):
+                    package.validate(self.root)
+                path.write_text(original)
+
+    def test_openai_linked_skills_directory_rejected(self):
+        skills = self.root / "plugins/waveline/skills"
+        outside = Path(self.temp.name) / "outside-skills"
+        self.assertTrue(skills.resolve().is_relative_to(self.root.resolve()))
+        self.assertTrue(outside.resolve().is_relative_to(Path(self.temp.name).resolve()))
+        skills.rename(outside)
+        try:
+            skills.symlink_to(outside, target_is_directory=True)
+        except OSError as error:
+            self.skipTest(f"Directory symlinks are unavailable: {error}")
+        with self.assertRaisesRegex(ValueError, "linked skills folder"):
+            package.validate(self.root)
+
+    def test_openai_archive_exposes_bundled_monitoring_skill(self):
+        archive_path = next(path for path in package.build(self.root) if "-openai-" in path.name)
+        with zipfile.ZipFile(archive_path) as archive:
+            manifest = json.loads(archive.read(".codex-plugin/plugin.json"))
+            self.assertEqual(manifest["skills"], "./skills/")
+            for skill in ("monitor-waveline", "auto-replies"):
+                relative = manifest["skills"].removeprefix("./") + skill + "/SKILL.md"
+                packaged_skill = archive.read(relative).decode("utf-8")
+                self.assertEqual(packaged_skill, (self.root / "plugins/waveline" / relative).read_text(encoding="utf-8"))
+
     def test_grok_and_cursor_configs_carry_only_the_production_url(self):
         for mcp_file, mutate in ((mcp_file, mutate) for mcp_file in (".mcp.json", "mcp.json") for mutate in (lambda d: d["mcpServers"]["waveline"].update(url="https://example.invalid/mcp"),
                        lambda d: d["mcpServers"]["waveline"].update(oauth={"clientId": "waveline-codex"}),
@@ -125,6 +169,7 @@ class PackagingTests(unittest.TestCase):
         # An accidentally present local credential file must never enter an archive.
         (self.root / "plugins/waveline/.env").write_text("SYNTHETIC_SECRET=do-not-package")
         (self.root / "plugins/waveline/skills/call-sentiment/.env").write_text("SYNTHETIC_SECRET=do-not-package")
+        (self.root / "plugins/waveline/skills/monitor-waveline/.env").write_text("SYNTHETIC_SECRET=do-not-package")
         first = {p.name: p.read_bytes() for p in package.build(self.root)}
         second = {p.name: p.read_bytes() for p in package.build(self.root)}
         self.assertEqual(first, second)
@@ -142,7 +187,11 @@ class PackagingTests(unittest.TestCase):
                 self.assertIn("skills/inbox-hours/SKILL.md", files)
                 self.assertIn("skills/manage-waveline/SKILL.md", files)
                 self.assertIn("skills/find-calls-and-messages/SKILL.md", files)
+                self.assertIn("skills/monitor-waveline/SKILL.md", files)
+                self.assertEqual(archive.read("skills/auto-replies/SKILL.md").decode("utf-8"),
+                                 (self.root / "plugins/waveline/skills/auto-replies/SKILL.md").read_text(encoding="utf-8"))
                 self.assertNotIn("skills/call-sentiment/.env", files)
+                self.assertNotIn("skills/monitor-waveline/.env", files)
                 own = ".claude-plugin" if "-claude-" in name else ".codex-plugin"
                 other = ".codex-plugin" if own == ".claude-plugin" else ".claude-plugin"
                 self.assertIn(own + "/plugin.json", files)

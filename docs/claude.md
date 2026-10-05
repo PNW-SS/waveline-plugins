@@ -3,6 +3,8 @@
 This repository provides a Waveline plugin for Claude Code. It connects to
 `https://api.waveline.tel/mcp` and requires a Waveline account.
 
+The endpoint requires a Claude host that supports MCP `2026-07-28` (MCP 2.0).
+
 ## Claude Code
 
 Add the repository marketplace, then install Waveline:

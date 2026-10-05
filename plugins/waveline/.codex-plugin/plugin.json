@@ -1,7 +1,7 @@
 {
   "name": "waveline",
   "version": "0.1.0",
-  "description": "Ask about Waveline calls, missed calls, voicemails, texts and contacts by inbox, teammate or customer; review transcripts and call analytics; manage inbox settings; and send explicitly approved text messages.",
+  "description": "Ask about Waveline calls, texts and contacts; review transcripts and analytics; set up automatic private reply suggestions; manage inbox settings; and send explicitly approved messages.",
   "author": {
     "name": "Waveline"
   },
@@ -9,18 +9,19 @@
   "interface": {
     "displayName": "Waveline",
     "shortDescription": "Ask about calls, texts, and contacts.",
-    "longDescription": "Connect your Waveline account to ask about calls, missed calls, voicemails, text conversations and contacts by inbox, teammate or customer, read saved transcripts and summaries, and review call analytics. Choose Workspace or one permitted inbox and approve the requested permissions. Optional actions update contacts, add notes, manage inbox settings, and send approved text messages. Each accepted external recipient send costs US$0.01 before tax, added to your workspace invoice; existing messaging charges may also apply.",
+    "longDescription": "Connect your Waveline account to ask about calls, missed calls, voicemails, text conversations and contacts by inbox, teammate or customer, read saved transcripts and summaries, and review call analytics. Ask for automatic private reply suggestions to have the assistant set up incoming-text monitoring and save replies in Waveline for review in an Events-capable host. Sign in as yourself and review the requested permissions and integration pricing during connection setup; the assistant follows your current Waveline access. Optional actions update contacts, add notes, manage inbox settings, and send approved text messages.",
     "developerName": "Waveline",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
     "defaultPrompt": [
       "Review yesterday's missed customer calls.",
       "Which text conversations are waiting for a reply?",
-      "Draft a follow-up text for a customer. Ask before sending."
+      "Automatically save reply suggestions in Waveline when customer texts arrive. Help me choose the inboxes."
     ],
     "composerIcon": "./assets/icon.svg",
     "logo": "./assets/logo.svg",
     "logoDark": "./assets/logo-dark.svg"
   },
-  "mcpServers": "./.mcp.codex.json"
+  "mcpServers": "./.mcp.codex.json",
+  "skills": "./skills/"
 }

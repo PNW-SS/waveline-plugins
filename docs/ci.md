@@ -18,6 +18,21 @@ The workflows use pinned actions and a pinned Claude CLI. Ordinary validation
 uses a read-only GitHub token and does not connect to Waveline or require account
 credentials. Package validation does not verify the live service.
 
+For monitoring or message-routing skill changes, also run the independent offline
+[intent, subscription, and messaging scenarios](../tests/monitoring-scenarios.md). They
+cover historical versus future requests, cancellation, repeated requests,
+existing triggers, missing permissions, unavailable Events tools, partial or
+uncertain results, satisfaction evidence, overdue checks, delegated actions,
+authorized sends without repeated fee approval, draft-only requests, internal
+recipient discovery, conversation routing, and sender membership restrictions.
+They also distinguish drafts in chat, saved Waveline suggestions, and sending,
+including freshness conflicts and the separate draft permission.
+Automatic-reply cases cover native setup from ordinary language, durable saving
+instructions, quiet saves, notification-only monitors, and missing host action
+support. Include `auto-replies` in skill validation and archive checks.
+Keep model behavior checks distinct from archive tests
+and from an explicitly authorized live host acceptance pass.
+
 ## Release
 
 1. Keep `VERSION` and both plugin manifests at the same stable x.y.z version.
